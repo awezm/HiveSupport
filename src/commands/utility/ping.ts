@@ -14,3 +14,5 @@ export default {
         await interaction.reply("Pong!");
     }
 } satisfies Command;
+
+// test
