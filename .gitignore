@@ -1,0 +1,11 @@
+node_modules/
+dist/
+
+.env
+logs.txt
+
+logs/
+data/
+transcripts/
+
+*.log
