@@ -10,6 +10,7 @@ import { loadEvents } from "./handlers/eventHandler";
 import { loadCommands } from "./handlers/commandHandler";
 import { deployCommands } from "./handlers/deployCommands";
 import { loadButtons } from "./handlers/buttonHandler";
+import { loadModals } from "./handlers/modalHandler";
 
 import { CustomClient } from "./types/Client";
 
@@ -25,6 +26,7 @@ const client = new Client({
     await deployCommands();
     
     await loadButtons(client);
+    await loadModals(client);
 
     await loadEvents(client);
 

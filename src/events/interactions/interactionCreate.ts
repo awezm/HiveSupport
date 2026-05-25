@@ -9,36 +9,88 @@ export default {
     name: Events.InteractionCreate,
 
     async execute(interaction: Interaction) {
+
         const client = interaction.client as CustomClient;
 
-        // SLASH COMMANDS
-        if (interaction.isChatInputCommand()) {
-            const command = client.commands.get(
-                interaction.commandName
-            );
+        try {
 
-            if (!command) return;
+            // SLASH COMMANDS
+            if (interaction.isChatInputCommand()) {
 
-            try {
+                const command = client.commands.get(
+                    interaction.commandName
+                );
+
+                if (!command) {
+                    console.log(
+                        `Missing command: ${interaction.commandName}`
+                    );
+
+                    return;
+                }
+
                 await command.execute(interaction);
-            } catch (error) {
-                console.error(error);
-            }
-        }
 
-        // BUTTONS
-        if (interaction.isButton()) {
-            const button = client.buttons.get(
-                interaction.customId
+                return;
+            }
+
+            // BUTTONS
+            if (interaction.isButton()) {
+
+                console.log(
+                    `Button Clicked: ${interaction.customId}`
+                );
+
+                const button = client.buttons.get(
+                    interaction.customId
+                );
+
+                if (!button) {
+
+                    console.log(
+                        `Missing button: ${interaction.customId}`
+                    );
+
+                    return;
+                }
+
+                await button.execute(interaction);
+
+                return;
+            }
+
+            // MODALS
+            if (interaction.isModalSubmit()) {
+
+                console.log(
+                    `Modal Submitted: ${interaction.customId}`
+                );
+
+                const modal = client.modals.get(
+                    interaction.customId
+                );
+
+                if (!modal) {
+
+                    console.log(
+                        `Missing modal: ${interaction.customId}`
+                    );
+
+                    return;
+                }
+
+                await modal.execute(interaction);
+
+                return;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "INTERACTION ERROR:"
             );
 
-            if (!button) return;
-
-            try {
-                await button.execute(interaction);
-            } catch (error) {
-                console.error(error);
-            }
+            console.error(error);
         }
     }
 };
