@@ -1,4 +1,7 @@
 import {
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
     ChannelType,
     ModalSubmitInteraction,
     PermissionFlagsBits
@@ -78,6 +81,17 @@ export default {
 
             console.log("Channel created.");
 
+            // CLOSE BUTTON
+            const closeButton = new ButtonBuilder()
+                .setCustomId("closeTicket")
+                .setLabel("Close Ticket")
+                .setEmoji("🔒")
+                .setStyle(ButtonStyle.Danger);
+
+            const row =
+                new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(closeButton);
+
             // SEND MESSAGE
             await channel.send({
                 content:
@@ -85,7 +99,8 @@ export default {
                     `**User:** ${interaction.user}\n` +
                     `**Issue:** ${issueSummary}\n` +
                     `**Troubleshooting:** ${troubleshooting || "None Provided"}\n` +
-                    `**Affected Service:** ${affectedService}`
+                    `**Affected Service:** ${affectedService}`,
+                components: [row]
             });
 
             console.log("Ticket message sent.");
