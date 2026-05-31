@@ -33,7 +33,7 @@ export default {
 
                     new ButtonBuilder()
                         .setCustomId("ticket_billing")
-                        .setLabel("Billing")
+                        .setLabel("IN DEV BUTTON")
                         .setStyle(ButtonStyle.Secondary)
                 );
 
