@@ -23,19 +23,25 @@ export default {
             )
             .setColor("#E6A700");
 
-        const row =
-            new ActionRowBuilder<ButtonBuilder>()
-                .addComponents(
-                    new ButtonBuilder()
-                        .setCustomId("ticket_support")
-                        .setLabel("General Support")
-                        .setStyle(ButtonStyle.Primary),
+const ENABLE_BILLING = false;
 
-                    new ButtonBuilder()
-                        .setCustomId("ticket_billing")
-                        .setLabel("IN DEV BUTTON")
-                        .setStyle(ButtonStyle.Secondary)
-                );
+const row = new ActionRowBuilder<ButtonBuilder>();
+
+row.addComponents(
+    new ButtonBuilder()
+        .setCustomId("ticket_support")
+        .setLabel("General Support")
+        .setStyle(ButtonStyle.Primary)
+);
+
+if (ENABLE_BILLING) {
+    row.addComponents(
+        new ButtonBuilder()
+            .setCustomId("ticket_billing")
+            .setLabel("Billing Support")
+            .setStyle(ButtonStyle.Secondary)
+    );
+};
 
         await interaction.reply({
             embeds: [embed],
