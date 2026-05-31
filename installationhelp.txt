@@ -1,0 +1,157 @@
+# HiveSupport 1.0 Alpha Installation Guide
+
+## About HiveSupport
+
+HiveSupport is a lightweight Discord support and ticket management bot built with TypeScript and discord.js.
+
+This release focuses on providing a simple and reliable support workflow without unnecessary complexity.
+
+Current features include:
+
+* Ticket Panel Command
+* Support Ticket Creation
+* Ticket Submission Modal
+* Automatic Ticket Channel Creation
+* Administrator-Based Staff Access
+* Ticket Close Button
+
+---
+
+## Requirements
+
+Before installing HiveSupport, ensure you have:
+
+* Node.js 20 or newer
+* npm
+* A Discord Account
+* A Discord Server where you have Administrator access
+
+---
+
+## Discord Bot Setup
+
+HiveSupport does not include a pre-configured Discord bot.
+
+You must create your own Discord Application and Bot through the Discord Developer Portal.
+
+### Create a Discord Application
+
+1. Visit the Discord Developer Portal:
+   https://discord.com/developers/applications
+
+2. Click **New Application**.
+
+3. Enter a name for your bot.
+
+4. Open the **Bot** tab.
+
+5. Click **Add Bot**.
+
+6. Copy your Bot Token.
+
+### Configure Bot Intents
+
+Under the Bot settings page, enable:
+
+* Server Members Intent
+
+### Invite the Bot
+
+Navigate to:
+
+**OAuth2 → URL Generator**
+
+Select:
+
+* bot
+* applications.commands
+
+Recommended Permissions:
+
+* Administrator
+
+Generate the invite URL and invite the bot to your server.
+
+---
+
+## Installation
+
+### 1. Download HiveSupport
+
+Download and extract the latest HiveSupport release.
+
+### 2. Install Dependencies
+
+Open a terminal inside the HiveSupport folder and run:
+
+npm install
+
+### 3. Configure Environment Variables
+
+Rename:
+
+.env.example
+
+to:
+
+.env
+
+Open the .env file and fill in your values.
+
+Example:
+
+DISCORD_TOKEN=YOUR_BOT_TOKEN
+
+CLIENT_ID=YOUR_APPLICATION_ID
+
+GUILD_ID=YOUR_SERVER_ID
+
+---
+
+## Starting HiveSupport
+
+Run:
+
+npm start
+
+HiveSupport will automatically initialize and start using your configured environment variables.
+
+---
+
+## Verify Installation
+
+Once the bot is online:
+
+1. Use the command:
+
+/panel
+
+2. HiveSupport should post the support panel.
+
+3. Click the **General Support** button.
+
+4. Complete the support form.
+
+5. Verify a ticket channel is created.
+
+---
+
+## Staff Permissions
+
+HiveSupport currently uses Discord Administrator permissions for staff management.
+
+Users with Administrator permissions can manage support tickets.
+
+More advanced permission systems may be introduced in future releases.
+
+---
+
+## Alpha Release Notice
+
+HiveSupport 1.0 Alpha is the first public testing release.
+
+The core support workflow is fully functional and ready for community testing.
+
+Feedback, bug reports, and suggestions are welcome as development continues.
+
+Thank you for helping test HiveSupport.
