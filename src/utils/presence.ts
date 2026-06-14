@@ -2,12 +2,12 @@ import { ActivityType, Client } from "discord.js";
 
 const activities = [
     {
-        name: "HiveSupport Alpha",
+        name: "HiveSupport Beta",
         state: "🚧 Alpha Prototype",
         type: ActivityType.Custom,
     },
     {
-        name: "HiveSupport",
+        name: "HiveSupport <3",
         type: ActivityType.Watching,
     },
     {
@@ -15,7 +15,7 @@ const activities = [
         type: ActivityType.Playing,
     },
     {
-        name: "Systems Online",
+        name: "New Backend!!",
         type: ActivityType.Competing,
     },
 ];
