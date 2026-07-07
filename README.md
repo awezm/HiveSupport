@@ -1,33 +1,18 @@
 # 🐝 HiveSupport
 
-HiveSupport is a modern Discord support and ticket management bot built with TypeScript and discord.js.
+HiveSupport is a modern Discord support and ticket management bot built with **TypeScript** and **discord.js**.
 
-The goal of the project is to create a clean, scalable, and production-ready support system focused entirely on support operations — not bloated moderation systems or unnecessary multi-purpose features.
+Rather than trying to be another all-in-one moderation bot, HiveSupport focuses exclusively on providing a clean, organized, and professional support experience for Discord communities.
 
-HiveSupport is being built with a strong focus on:
-
-* Clean architecture
-* Modular systems
-* Stability first development
-* Real-world hosting/support workflows
-* Easy long-term scalability
+The project is designed around real-world support workflows with an emphasis on maintainability, scalability, and ease of deployment.
 
 ---
 
-# 🚧 Current Development Status
+# 🚧 Development Status
 
-HiveSupport is currently in active alpha development.
+HiveSupport is currently in **Alpha**.
 
-The current focus is building a stable support foundation before adding larger systems.
-
-Development priorities right now:
-
-* Ticket panel system
-* Ticket channel creation
-* Ticket embeds
-* Ticket close button system
-* Improved interaction handling
-* Internal staff workflow improvements
+Core ticket functionality is operational and actively expanding. Current development focuses on refining the support workflow, improving staff quality-of-life features, and building a solid foundation before introducing larger systems.
 
 ---
 
@@ -41,84 +26,104 @@ Development priorities right now:
 * Dynamic button loading
 * Dynamic modal loading
 * Event-based interaction routing
-* Slash command auto deployment
-* GitHub workflow integration
+* Slash command deployment
+* Config-driven presence rotation
 * Structured project organization
-* Console logging system
+* Centralized configuration system
+* GitHub-friendly development workflow
 
 ---
 
 # 🎫 Ticket System
 
-## Current
+## Support Panel
 
-* Ticket panel command
-* Ticket channel creation
+* Slash command to post a support panel
+* Staff-only panel deployment
+* Optional panel channel restriction
+* Configurable support categories
+
+## Multi-Category Ticket Intake
+
+Support requests can be routed through dedicated intake flows:
+
+* 🔧 Technical Support
+* 💳 Billing Support
+* 👤 Account Support
+* 💬 General Support
+
+Each category includes:
+
+* Dedicated button
+* Category-specific modal
+* Custom questions
+* Individual embed styling
+* Channel prefix configuration
+
+---
+
+## Ticket Creation
+
+* Private ticket channels
 * Permission overwrites
-* User ticket protection
-* Support category support
-* Modular ticket button system
-* Modal-based ticket submission
-* Ticket information embeds
-* Private internal staff thread creation
+* Duplicate ticket prevention
+* Configurable support role
+* Configurable ticket category
+* Embedded ticket summary
+* Category-specific channel prefixes
 
-## Planned
+Example channel names:
 
-* Ticket close system
-* Ticket reopen system
-* Ticket claiming
-* Ticket transcripts
-* Ticket logging
-* Staff notes
-* Ticket priorities
-* Ticket tags
-* Advanced panel customization
-* Auto responses
-* Support analytics
+* `ticket-t-username`
+* `ticket-b-username`
+* `ticket-a-username`
+* `ticket-g-username`
 
 ---
 
-# 🧱 Architecture Goals
+## Ticket Closing
 
-HiveSupport is designed around a scalable modular structure.
-
-Every major system is separated into its own handler and module structure to keep the codebase maintainable as the project grows.
-
-Current modular systems include:
-
-* Commands
-* Buttons
-* Modals
-* Events
-* Handlers
-* Utility systems
-
-The project intentionally avoids large monolithic files.
+* Close button
+* Close confirmation modal
+* Required close reason
+* Optional staff notes
+* Automatic transcript generation
+* Transcript archive channel
+* Archive embeds
+* Attached `.txt` transcript file
+* Automatic ticket deletion after archiving
 
 ---
 
-# 🛠️ Tech Stack
+# ⚙️ Configuration
 
-* TypeScript
-* Node.js
-* discord.js
-* Git + GitHub
+HiveSupport is designed to be configuration-driven whenever possible.
 
-Future integrations may include:
+Current configurable systems include:
 
-* Database support
-* Web dashboard
-* External API integrations
-* Logging systems
+* Bot presence rotation
+* Support categories
+* Ticket intake questions
+* Button labels
+* Modal titles
+* Embed colors
+* Channel prefixes
+* Panel channel restriction
+* Transcript archive channel
+* Support role
+* Ticket category
 
 ---
 
 # 📁 Project Structure
 
-```txt
+```text
 src/
 ├── buttons/
 ├── commands/
+├── config/
+│   ├── presence.ts
+│   └── ticketIntake.ts
 ├── events/
 ├── handlers/
 ├── modals/
@@ -129,18 +134,78 @@ src/
 
 ---
 
-# 🚀 Philosophy
+# 🛠️ Tech Stack
 
-HiveSupport is being built as a realistic support platform rather than another generic Discord utility bot.
-
-The project focuses on:
-
-* Reliability over feature spam
-* Clean UX over gimmicks
-* Real support workflows
-* Maintainable architecture
-* Long-term scalability
+* TypeScript
+* Node.js
+* discord.js
+* Git
+* GitHub
 
 ---
 
-# 📌
+# 🚀 Design Philosophy
+
+HiveSupport is built around several core principles:
+
+* Reliability over feature bloat
+* Clean, intuitive user experience
+* Real-world support workflows
+* Modular architecture
+* Easy long-term maintenance
+* Configuration over hardcoded logic
+* Production-oriented design
+
+---
+
+# 🔧 Environment Variables
+
+```env
+DISCORD_TOKEN=your_bot_token
+CLIENT_ID=your_application_id
+GUILD_ID=your_server_id
+
+SUPPORT_ROLE_ID=your_support_role
+TICKET_CATEGORY_ID=your_ticket_category
+
+PANEL_CHANNEL_ID=optional_panel_channel
+TRANSCRIPT_CHANNEL_ID=transcript_archive_channel
+```
+
+---
+
+# 📈 Planned Features
+
+The following features are planned for future releases:
+
+* Ticket claiming
+* Ticket reopening
+* Staff notes
+* Ticket priorities
+* Ticket tags
+* Transcript searching
+* Support analytics
+* Automatic responses
+* Custom panel builder
+* Per-category permissions
+* Localization support
+* Database-backed persistence
+* Web dashboard
+* Multi-server support
+* Public API integrations
+
+---
+
+# 🤝 Contributing
+
+HiveSupport is currently under active development. Suggestions, bug reports, and pull requests are always welcome as the project continues to evolve.
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**HiveSupport** is developed with the goal of providing Discord communities with a clean, dependable, and scalable support platform without the unnecessary complexity of traditional multi-purpose bots.
