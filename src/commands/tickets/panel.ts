@@ -15,18 +15,33 @@ export default {
         .setDescription("Send the ticket panel."),
 
     async execute(interaction: ChatInputCommandInteraction) {
+
         const embed = new EmbedBuilder()
-            .setTitle("BeeHive Support")
-            .setDescription("Choose a ticket category below.")
+            .setTitle("🎫 BeeHive Support")
+            .setDescription(
+                "Choose a ticket category below."
+            )
             .setColor("#E6A700");
 
-        const row = new ActionRowBuilder<ButtonBuilder>()
-            .addComponents(
-                new ButtonBuilder()
-                    .setCustomId("ticket_support")
-                    .setLabel("General Support")
-                    .setStyle(ButtonStyle.Primary)
-            );
+const ENABLE_BILLING = false;
+
+const row = new ActionRowBuilder<ButtonBuilder>();
+
+row.addComponents(
+    new ButtonBuilder()
+        .setCustomId("ticket_support")
+        .setLabel("General Support")
+        .setStyle(ButtonStyle.Primary)
+);
+
+if (ENABLE_BILLING) {
+    row.addComponents(
+        new ButtonBuilder()
+            .setCustomId("ticket_billing")
+            .setLabel("Billing Support")
+            .setStyle(ButtonStyle.Secondary)
+    );
+};
 
         await interaction.reply({
             embeds: [embed],
