@@ -8,6 +8,11 @@ import { Button } from "../../types/Button";
 
 const pendingClosures = new Map<string, NodeJS.Timeout>();
 
+function getOptionalEnv(name: string): string | undefined {
+    const value = process.env[name]?.trim();
+    return value ? value : undefined;
+}
+
 export default {
     customId: "closeTicket",
 
@@ -33,8 +38,13 @@ export default {
             const isTicketOwner = ticketOwnerId === interaction.user.id;
             const canManageChannels =
                 interaction.memberPermissions?.has(PermissionFlagsBits.ManageChannels) ?? false;
+            const supportRoleId = getOptionalEnv("SUPPORT_ROLE_ID");
+            const hasSupportRole =
+                supportRoleId !== undefined &&
+                interaction.inCachedGuild() &&
+                interaction.member.roles.cache.has(supportRoleId);
 
-            if (!isTicketOwner && !canManageChannels) {
+            if (!isTicketOwner && !canManageChannels && !hasSupportRole) {
                 await interaction.reply({
                     content: "You do not have permission to close this ticket. Only the ticket owner or staff can close it.",
                     ephemeral: true
@@ -76,7 +86,6 @@ export default {
                     console.error(error);
                 }
             }, 5000);
-
         } catch (error) {
             console.error("CLOSE TICKET ERROR:");
             console.error(error);
