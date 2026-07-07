@@ -27,14 +27,11 @@ export default {
     customId: "submitSupportTicket",
 
     async execute(interaction: ModalSubmitInteraction) {
-
         try {
-
             const guild = interaction.guild;
 
             if (!guild) return;
 
-            // MODAL FIELDS
             const issueSummary =
                 interaction.fields.getTextInputValue(
                     "issueSummary"
@@ -52,8 +49,31 @@ export default {
 
             const supportRoleId = getOptionalEnv("SUPPORT_ROLE_ID");
             const ticketCategoryId = getOptionalEnv("TICKET_CATEGORY_ID");
+            const supportRole = supportRoleId
+                ? guild.roles.cache.get(supportRoleId)
+                : null;
+            const ticketCategory = ticketCategoryId
+                ? guild.channels.cache.get(ticketCategoryId)
+                : null;
 
-            // EXISTING TICKET CHECK
+            if (supportRoleId && !supportRole) {
+                await interaction.reply({
+                    content: "Ticket setup error: SUPPORT_ROLE_ID does not match a role in this server.",
+                    ephemeral: true
+                });
+
+                return;
+            }
+
+            if (ticketCategoryId && (!ticketCategory || ticketCategory.type !== ChannelType.GuildCategory)) {
+                await interaction.reply({
+                    content: "Ticket setup error: TICKET_CATEGORY_ID must point to a category in this server.",
+                    ephemeral: true
+                });
+
+                return;
+            }
+
             const existingChannel = guild.channels.cache.find(
                 c =>
                     c.type === ChannelType.GuildText &&
@@ -62,8 +82,7 @@ export default {
 
             if (existingChannel) {
                 await interaction.reply({
-                    content:
-                        "You already have an open ticket.",
+                    content: "You already have an open ticket.",
                     ephemeral: true
                 });
 
@@ -79,7 +98,6 @@ export default {
                         PermissionFlagsBits.ViewChannel
                     ]
                 },
-
                 {
                     id: interaction.user.id,
                     allow: [
@@ -90,9 +108,9 @@ export default {
                 }
             ];
 
-            if (supportRoleId) {
+            if (supportRole) {
                 permissionOverwrites.push({
-                    id: supportRoleId,
+                    id: supportRole.id,
                     allow: [
                         PermissionFlagsBits.ViewChannel,
                         PermissionFlagsBits.SendMessages,
@@ -102,18 +120,16 @@ export default {
                 });
             }
 
-            // CREATE CHANNEL
             const channel = await guild.channels.create({
                 name: `ticket-${sanitizeChannelSegment(interaction.user.username)}-${interaction.user.id.slice(-4)}`,
                 type: ChannelType.GuildText,
                 topic: `ticket-owner:${interaction.user.id}`,
-                parent: ticketCategoryId,
+                parent: ticketCategory?.id,
                 permissionOverwrites
             });
 
             console.log("Channel created.");
 
-            // CLOSE BUTTON
             const closeButton = new ButtonBuilder()
                 .setCustomId("closeTicket")
                 .setLabel("Close Ticket")
@@ -123,7 +139,6 @@ export default {
                 new ActionRowBuilder<ButtonBuilder>()
                     .addComponents(closeButton);
 
-            // SEND MESSAGE
             await channel.send({
                 content:
                     `# Support Ticket\n\n` +
@@ -136,29 +151,30 @@ export default {
 
             console.log("Ticket message sent.");
 
-            // STAFF THREAD
-            await channel.threads.create({
-                name: "staff-notes",
-                autoArchiveDuration: 1440,
-                type: ChannelType.PrivateThread
-            });
+            try {
+                await channel.threads.create({
+                    name: "staff-notes",
+                    autoArchiveDuration: 1440,
+                    type: ChannelType.PrivateThread
+                });
 
-            console.log("Staff thread created.");
+                console.log("Staff thread created.");
+            } catch (error) {
+                console.error("Failed to create staff thread:");
+                console.error(error);
+            }
 
-            // SUCCESS REPLY
             await interaction.reply({
                 content: `Created ticket: ${channel}`,
                 ephemeral: true
             });
-
         } catch (error) {
             console.error("MODAL ERROR:");
             console.error(error);
 
             if (!interaction.replied) {
                 await interaction.reply({
-                    content:
-                        "Failed to create ticket.",
+                    content: "Failed to create ticket.",
                     ephemeral: true
                 });
             }
