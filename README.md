@@ -12,7 +12,7 @@ The project is designed around real-world support workflows with an emphasis on 
 
 HiveSupport is currently in **Alpha**.
 
-Core ticket functionality is operational and actively expanding. Current development focuses on refining the support workflow, improving staff quality-of-life features, and building a solid foundation before introducing larger systems.
+The core support workflow is fully functional, with ongoing development focused on expanding staff tools, customization, and advanced workflow features while maintaining a stable foundation.
 
 ---
 
@@ -27,7 +27,7 @@ Core ticket functionality is operational and actively expanding. Current develop
 * Dynamic modal loading
 * Event-based interaction routing
 * Slash command deployment
-* Config-driven presence rotation
+* Config-driven rotating presence
 * Structured project organization
 * Centralized configuration system
 * GitHub-friendly development workflow
@@ -38,14 +38,16 @@ Core ticket functionality is operational and actively expanding. Current develop
 
 ## Support Panel
 
-* Slash command to post a support panel
+* Slash command to deploy a support panel
 * Staff-only panel deployment
 * Optional panel channel restriction
 * Configurable support categories
 
+---
+
 ## Multi-Category Ticket Intake
 
-Support requests can be routed through dedicated intake flows:
+Support requests can be routed through dedicated intake categories:
 
 * 🔧 Technical Support
 * 💳 Billing Support
@@ -56,21 +58,22 @@ Each category includes:
 
 * Dedicated button
 * Category-specific modal
-* Custom questions
+* Custom intake questions
 * Individual embed styling
-* Channel prefix configuration
+* Configurable channel prefixes
 
 ---
 
 ## Ticket Creation
 
 * Private ticket channels
-* Permission overwrites
+* Automatic permission overwrites
 * Duplicate ticket prevention
 * Configurable support role
 * Configurable ticket category
 * Embedded ticket summary
-* Category-specific channel prefixes
+* Category-specific channel naming
+* Configurable ticket intake system
 
 Example channel names:
 
@@ -81,17 +84,28 @@ Example channel names:
 
 ---
 
-## Ticket Closing
+## Ticket Resolution
 
-* Close button
+HiveSupport includes a complete ticket resolution workflow designed to preserve support history before tickets are removed.
+
+Features include:
+
+* Ticket close button
 * Close confirmation modal
 * Required close reason
 * Optional staff notes
 * Automatic transcript generation
-* Transcript archive channel
-* Archive embeds
+* Archive embed sent to a configurable transcript channel
 * Attached `.txt` transcript file
-* Automatic ticket deletion after archiving
+* Archive information including:
+
+  * Ticket creator
+  * Ticket category
+  * Staff member who closed the ticket
+  * Close reason
+  * Additional notes
+  * Close timestamp
+* Automatic ticket deletion after successful archival
 
 ---
 
@@ -101,17 +115,18 @@ HiveSupport is designed to be configuration-driven whenever possible.
 
 Current configurable systems include:
 
-* Bot presence rotation
+* Rotating bot presence
 * Support categories
 * Ticket intake questions
 * Button labels
+* Button styles
 * Modal titles
 * Embed colors
-* Channel prefixes
-* Panel channel restriction
-* Transcript archive channel
+* Ticket channel prefixes
 * Support role
 * Ticket category
+* Panel channel restriction
+* Transcript archive channel
 
 ---
 
@@ -149,11 +164,11 @@ src/
 HiveSupport is built around several core principles:
 
 * Reliability over feature bloat
-* Clean, intuitive user experience
+* Clean and intuitive user experience
 * Real-world support workflows
 * Modular architecture
-* Easy long-term maintenance
 * Configuration over hardcoded logic
+* Long-term maintainability
 * Production-oriented design
 
 ---
@@ -180,7 +195,6 @@ The following features are planned for future releases:
 
 * Ticket claiming
 * Ticket reopening
-* Staff notes
 * Ticket priorities
 * Ticket tags
 * Transcript searching
@@ -198,7 +212,7 @@ The following features are planned for future releases:
 
 # 🤝 Contributing
 
-HiveSupport is currently under active development. Suggestions, bug reports, and pull requests are always welcome as the project continues to evolve.
+HiveSupport is currently under active development. Bug reports, feature requests, and pull requests are always welcome.
 
 ---
 
@@ -208,4 +222,8 @@ This project is licensed under the MIT License.
 
 ---
 
-**HiveSupport** is developed with the goal of providing Discord communities with a clean, dependable, and scalable support platform without the unnecessary complexity of traditional multi-purpose bots.
+## 🐝 Project Vision
+
+HiveSupport aims to provide Discord communities with a clean, dependable, and scalable support platform without unnecessary complexity.
+
+Instead of trying to do everything, HiveSupport focuses on doing one thing exceptionally well: delivering a professional support experience for both users and staff.
