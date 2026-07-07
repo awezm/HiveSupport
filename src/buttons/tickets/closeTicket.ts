@@ -1,5 +1,6 @@
 import {
     ButtonInteraction,
+    ChannelType,
     PermissionFlagsBits
 } from "discord.js";
 
@@ -16,7 +17,7 @@ export default {
 
             if (!channel || !channel.isTextBased()) return;
 
-            if (!channel.isDMBased() && !channel.name.startsWith("ticket-")) {
+            if (channel.type !== ChannelType.GuildText || !channel.name.startsWith("ticket-")) {
                 await interaction.reply({
                     content: "This button can only be used inside ticket channels.",
                     ephemeral: true
@@ -25,9 +26,17 @@ export default {
                 return;
             }
 
-            if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageChannels)) {
+            const ticketOwnerId = channel.topic?.startsWith("ticket-owner:")
+                ? channel.topic.slice("ticket-owner:".length)
+                : null;
+
+            const isTicketOwner = ticketOwnerId === interaction.user.id;
+            const canManageChannels =
+                interaction.memberPermissions?.has(PermissionFlagsBits.ManageChannels) ?? false;
+
+            if (!isTicketOwner && !canManageChannels) {
                 await interaction.reply({
-                    content: "You do not have permission to close this ticket.",
+                    content: "You do not have permission to close this ticket. Only the ticket owner or staff can close it.",
                     ephemeral: true
                 });
 
