@@ -3,12 +3,12 @@ import {
     ChatInputCommandInteraction,
     ActionRowBuilder,
     ButtonBuilder,
-    ButtonStyle,
     EmbedBuilder,
     PermissionFlagsBits
 } from "discord.js";
 
 import { Command } from "../../types/Command";
+import { ticketCategories } from "../../config/ticketIntake";
 
 function getOptionalEnv(name: string): string | undefined {
     const value = process.env[name]?.trim();
@@ -52,15 +52,17 @@ export default {
 
         const embed = new EmbedBuilder()
             .setTitle("BeeHive Support")
-            .setDescription("Choose a ticket category below.")
+            .setDescription("Choose the support category that best matches your issue.")
             .setColor("#E6A700");
 
         const row = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
-                new ButtonBuilder()
-                    .setCustomId("ticket_support")
-                    .setLabel("General Support")
-                    .setStyle(ButtonStyle.Primary)
+                Object.values(ticketCategories).map(category =>
+                    new ButtonBuilder()
+                        .setCustomId(category.buttonCustomId)
+                        .setLabel(category.buttonLabel)
+                        .setStyle(category.buttonStyle)
+                )
             );
 
         await interaction.reply({
