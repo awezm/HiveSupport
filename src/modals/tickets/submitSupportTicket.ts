@@ -9,6 +9,20 @@ import {
 
 import { Modal } from "../../types/Modal";
 
+function getOptionalEnv(name: string): string | undefined {
+    const value = process.env[name]?.trim();
+    return value ? value : undefined;
+}
+
+function sanitizeChannelSegment(value: string): string {
+    return value
+        .toLowerCase()
+        .replace(/[^a-z0-9-]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .slice(0, 30) || "user";
+}
+
 export default {
     customId: "submitSupportTicket",
 
@@ -36,11 +50,14 @@ export default {
                     "affectedService"
                 );
 
+            const supportRoleId = getOptionalEnv("SUPPORT_ROLE_ID");
+            const ticketCategoryId = getOptionalEnv("TICKET_CATEGORY_ID");
+
             // EXISTING TICKET CHECK
             const existingChannel = guild.channels.cache.find(
                 c =>
-                    c.name ===
-                    `ticket-${interaction.user.username.toLowerCase()}`
+                    c.type === ChannelType.GuildText &&
+                    c.topic === `ticket-owner:${interaction.user.id}`
             );
 
             if (existingChannel) {
@@ -55,28 +72,43 @@ export default {
 
             console.log("Creating ticket channel...");
 
+            const permissionOverwrites = [
+                {
+                    id: guild.roles.everyone.id,
+                    deny: [
+                        PermissionFlagsBits.ViewChannel
+                    ]
+                },
+
+                {
+                    id: interaction.user.id,
+                    allow: [
+                        PermissionFlagsBits.ViewChannel,
+                        PermissionFlagsBits.SendMessages,
+                        PermissionFlagsBits.ReadMessageHistory
+                    ]
+                }
+            ];
+
+            if (supportRoleId) {
+                permissionOverwrites.push({
+                    id: supportRoleId,
+                    allow: [
+                        PermissionFlagsBits.ViewChannel,
+                        PermissionFlagsBits.SendMessages,
+                        PermissionFlagsBits.ReadMessageHistory,
+                        PermissionFlagsBits.ManageThreads
+                    ]
+                });
+            }
+
             // CREATE CHANNEL
             const channel = await guild.channels.create({
-                name: `ticket-${interaction.user.username}`,
+                name: `ticket-${sanitizeChannelSegment(interaction.user.username)}-${interaction.user.id.slice(-4)}`,
                 type: ChannelType.GuildText,
-
-                permissionOverwrites: [
-                    {
-                        id: guild.roles.everyone.id,
-                        deny: [
-                            PermissionFlagsBits.ViewChannel
-                        ]
-                    },
-
-                    {
-                        id: interaction.user.id,
-                        allow: [
-                            PermissionFlagsBits.ViewChannel,
-                            PermissionFlagsBits.SendMessages,
-                            PermissionFlagsBits.ReadMessageHistory
-                        ]
-                    }
-                ]
+                topic: `ticket-owner:${interaction.user.id}`,
+                parent: ticketCategoryId,
+                permissionOverwrites
             });
 
             console.log("Channel created.");
@@ -85,7 +117,6 @@ export default {
             const closeButton = new ButtonBuilder()
                 .setCustomId("closeTicket")
                 .setLabel("Close Ticket")
-                .setEmoji("🔒")
                 .setStyle(ButtonStyle.Danger);
 
             const row =

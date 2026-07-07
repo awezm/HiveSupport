@@ -8,11 +8,20 @@ import {
 
 import { loadEvents } from "./handlers/eventHandler";
 import { loadCommands } from "./handlers/commandHandler";
-import { deployCommands } from "./handlers/deployCommands";
 import { loadButtons } from "./handlers/buttonHandler";
 import { loadModals } from "./handlers/modalHandler";
 
 import { CustomClient } from "./types/Client";
+
+function getRequiredEnv(name: string): string {
+    const value = process.env[name]?.trim();
+
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}`);
+    }
+
+    return value;
+}
 
 const client = new Client({
     intents: [
@@ -21,14 +30,17 @@ const client = new Client({
 }) as CustomClient;
 
 (async () => {
-    await loadCommands(client);
+    getRequiredEnv("DISCORD_TOKEN");
 
-    await deployCommands();
-    
+    await loadCommands(client);
     await loadButtons(client);
     await loadModals(client);
 
     await loadEvents(client);
 
     await client.login(process.env.DISCORD_TOKEN);
-})();
+})().catch(error => {
+    console.error("STARTUP ERROR:");
+    console.error(error);
+    process.exit(1);
+});

@@ -91,6 +91,19 @@ export default {
             );
 
             console.error(error);
+
+            if (interaction.isRepliable()) {
+                const reply = {
+                    content: "Something went wrong while handling that interaction.",
+                    ephemeral: true
+                };
+
+                if (interaction.deferred || interaction.replied) {
+                    await interaction.followUp(reply).catch(() => null);
+                } else {
+                    await interaction.reply(reply).catch(() => null);
+                }
+            }
         }
     }
 };
