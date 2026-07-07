@@ -1,7 +1,9 @@
 import {
+    AttachmentBuilder,
     ButtonInteraction,
     ChannelType,
-    PermissionFlagsBits
+    PermissionFlagsBits,
+    TextChannel
 } from "discord.js";
 
 import { Button } from "../../types/Button";
@@ -11,6 +13,57 @@ const pendingClosures = new Map<string, NodeJS.Timeout>();
 function getOptionalEnv(name: string): string | undefined {
     const value = process.env[name]?.trim();
     return value ? value : undefined;
+}
+
+async function fetchAllMessages(channel: TextChannel) {
+    const messages = [];
+    let before: string | undefined;
+
+    while (true) {
+        const batch = await channel.messages.fetch({
+            limit: 100,
+            before
+        });
+
+        if (batch.size === 0) {
+            break;
+        }
+
+        messages.push(...batch.values());
+        before = batch.last()?.id;
+    }
+
+    return messages.reverse();
+}
+
+function formatTranscriptLine(channel: TextChannel, closedBy: string) {
+    return [
+        `Ticket Transcript`,
+        `Channel: #${channel.name}`,
+        `Channel ID: ${channel.id}`,
+        `Closed By: ${closedBy}`,
+        `Closed At: ${new Date().toISOString()}`,
+        `Topic: ${channel.topic ?? "None"}`,
+        ``
+    ].join("\n");
+}
+
+async function buildTranscriptBuffer(channel: TextChannel, closedBy: string) {
+    const messages = await fetchAllMessages(channel);
+    const lines = [formatTranscriptLine(channel, closedBy)];
+
+    for (const message of messages) {
+        const createdAt = message.createdAt.toISOString();
+        const attachments = message.attachments.map(attachment => attachment.url);
+        const contentParts = [message.content.trim(), ...attachments].filter(Boolean);
+        const content = contentParts.join(" | ") || "[no text content]";
+
+        lines.push(
+            `[${createdAt}] ${message.author.tag}: ${content}`
+        );
+    }
+
+    return Buffer.from(lines.join("\n"), "utf8");
 }
 
 export default {
@@ -74,9 +127,61 @@ export default {
             clearTimeout(existingConfirmation);
             pendingClosures.delete(confirmationKey);
 
+            const transcriptChannelId = getOptionalEnv("TRANSCRIPT_CHANNEL_ID");
+
+            if (!transcriptChannelId) {
+                await interaction.reply({
+                    content: "Transcript archive is not configured. Set TRANSCRIPT_CHANNEL_ID before closing tickets.",
+                    ephemeral: true
+                });
+
+                return;
+            }
+
+            const transcriptChannel = interaction.guild?.channels.cache.get(transcriptChannelId);
+
+            if (!transcriptChannel || transcriptChannel.type !== ChannelType.GuildText) {
+                await interaction.reply({
+                    content: "Transcript archive channel is invalid. Update TRANSCRIPT_CHANNEL_ID before closing tickets.",
+                    ephemeral: true
+                });
+
+                return;
+            }
+
             await interaction.reply({
-                content: "Closing this ticket in 5 seconds..."
+                content: "Archiving transcript and closing this ticket...",
+                ephemeral: true
             });
+
+            try {
+                const textChannel = channel as TextChannel;
+                const transcriptBuffer = await buildTranscriptBuffer(
+                    textChannel,
+                    `${interaction.user.tag} (${interaction.user.id})`
+                );
+                const transcriptFile = new AttachmentBuilder(transcriptBuffer, {
+                    name: `${textChannel.name}-transcript.txt`
+                });
+
+                await transcriptChannel.send({
+                    content:
+                        `Archived transcript from <#${textChannel.id}>.\n` +
+                        `Ticket owner: ${ticketOwnerId ? `<@${ticketOwnerId}>` : "Unknown"}\n` +
+                        `Closed by: ${interaction.user}`,
+                    files: [transcriptFile]
+                });
+            } catch (error) {
+                console.error("Failed to archive transcript:");
+                console.error(error);
+
+                await interaction.followUp({
+                    content: "Failed to archive the transcript, so the ticket was not deleted.",
+                    ephemeral: true
+                });
+
+                return;
+            }
 
             setTimeout(async () => {
                 try {
@@ -85,7 +190,7 @@ export default {
                     console.error("Failed to delete ticket channel:");
                     console.error(error);
                 }
-            }, 5000);
+            }, 3000);
         } catch (error) {
             console.error("CLOSE TICKET ERROR:");
             console.error(error);
