@@ -1,157 +1,264 @@
-# HiveSupport 1.0 Alpha Installation Guide
+# 🐝 HiveSupport 1.0 Alpha Installation Guide
 
-## About HiveSupport
+## Welcome
 
-HiveSupport is a lightweight Discord support and ticket management bot built with TypeScript and discord.js.
+Thank you for choosing **HiveSupport**!
 
-This release focuses on providing a simple and reliable support workflow without unnecessary complexity.
+HiveSupport is a modern Discord support and ticket management bot built with **TypeScript** and **discord.js**, designed to provide a clean, organized, and reliable support workflow for Discord communities.
 
-Current features include:
-
-* Ticket Panel Command
-* Support Ticket Creation
-* Ticket Submission Modal
-* Automatic Ticket Channel Creation
-* Administrator-Based Staff Access
-* Ticket Close Button
+This alpha release includes a complete ticket lifecycle, from ticket creation to automatic transcript archiving.
 
 ---
 
-## Requirements
+# ✨ Included Features
+
+* Multi-category support panel
+* Staff-only panel deployment
+* Optional panel channel restriction
+* Category-specific ticket intake forms
+* Private ticket channels
+* Duplicate ticket prevention
+* Embedded ticket summaries
+* Ticket close workflow
+* Required close reason
+* Optional staff notes
+* Automatic transcript generation
+* Transcript archive channel
+* Configurable rotating bot presence
+* Configuration-driven ticket system
+
+---
+
+# 📋 Requirements
 
 Before installing HiveSupport, ensure you have:
 
-* Node.js 20 or newer
+* Node.js **20.x** or newer
 * npm
-* A Discord Account
-* A Discord Server where you have Administrator access
+* A Discord account
+* A Discord server where you have Administrator permissions
 
 ---
 
-## Discord Bot Setup
+# 🤖 Creating Your Discord Bot
 
-HiveSupport does not include a pre-configured Discord bot.
+HiveSupport does **not** include a pre-configured Discord application.
 
-You must create your own Discord Application and Bot through the Discord Developer Portal.
+You'll need to create your own bot through the Discord Developer Portal.
 
-### Create a Discord Application
+## Create an Application
 
 1. Visit the Discord Developer Portal:
-   https://discord.com/developers/applications
 
-2. Click **New Application**.
+https://discord.com/developers/applications
 
-3. Enter a name for your bot.
+2. Click **New Application**
 
-4. Open the **Bot** tab.
+3. Give your application a name
 
-5. Click **Add Bot**.
+4. Open the **Bot** page
 
-6. Copy your Bot Token.
+5. Click **Add Bot**
 
-### Configure Bot Intents
+6. Copy your **Bot Token**
 
-Under the Bot settings page, enable:
+---
 
-* Server Members Intent
+## Enable Gateway Intents
 
-### Invite the Bot
+Under the **Bot** page, enable:
 
-Navigate to:
+* ✅ Server Members Intent
+
+No additional privileged intents are required.
+
+---
+
+## Invite Your Bot
+
+Open:
 
 **OAuth2 → URL Generator**
 
-Select:
+Scopes:
 
-* bot
-* applications.commands
+* `bot`
+* `applications.commands`
 
-Recommended Permissions:
+Recommended Bot Permissions:
 
 * Administrator
 
-Generate the invite URL and invite the bot to your server.
+Generate the invite URL and invite the bot to your Discord server.
 
 ---
 
-## Installation
+# 📦 Installation
 
-### 1. Download HiveSupport
+## 1. Download HiveSupport
 
-Download and extract the latest HiveSupport release.
+Download the latest HiveSupport release and extract it to your preferred location.
 
-### 2. Install Dependencies
+---
 
-Open a terminal inside the HiveSupport folder and run:
+## 2. Install Dependencies
 
+Inside the project directory, run:
+
+```bash
 npm install
+```
 
-### 3. Configure Environment Variables
+---
+
+## 3. Configure Environment Variables
 
 Rename:
 
+```text
 .env.example
+```
 
-to:
+to
 
+```text
 .env
+```
 
-Open the .env file and fill in your values.
+Open the file and configure the required values.
 
 Example:
 
+```env
 DISCORD_TOKEN=YOUR_BOT_TOKEN
-
 CLIENT_ID=YOUR_APPLICATION_ID
-
 GUILD_ID=YOUR_SERVER_ID
 
+SUPPORT_ROLE_ID=YOUR_SUPPORT_ROLE_ID
+TICKET_CATEGORY_ID=YOUR_TICKET_CATEGORY_ID
+
+PANEL_CHANNEL_ID=OPTIONAL_PANEL_CHANNEL_ID
+TRANSCRIPT_CHANNEL_ID=YOUR_TRANSCRIPT_CHANNEL_ID
+```
+
 ---
 
-## Starting HiveSupport
+# 🔧 Environment Variable Reference
 
-Run:
+| Variable              | Required | Description                                              |
+| --------------------- | :------: | -------------------------------------------------------- |
+| DISCORD_TOKEN         |     ✅    | Your Discord bot token                                   |
+| CLIENT_ID             |     ✅    | Discord Application ID                                   |
+| GUILD_ID              |     ✅    | Discord Server ID                                        |
+| SUPPORT_ROLE_ID       |     ✅    | Role granted access to support tickets                   |
+| TICKET_CATEGORY_ID    |     ✅    | Category where ticket channels are created               |
+| PANEL_CHANNEL_ID      | Optional | Restrict the `/panel` command to a single channel        |
+| TRANSCRIPT_CHANNEL_ID |     ✅    | Channel where ticket archives and transcripts are posted |
 
+---
+
+# ▶️ Starting HiveSupport
+
+Development:
+
+```bash
+npm run dev
+```
+
+Production:
+
+```bash
 npm start
+```
 
-HiveSupport will automatically initialize and start using your configured environment variables.
+HiveSupport will automatically:
+
+* Register slash commands
+* Load events
+* Load buttons
+* Load modals
+* Load configuration
+* Start rotating presence
+* Connect to Discord
 
 ---
 
-## Verify Installation
+# ✅ Verifying Installation
 
 Once the bot is online:
 
-1. Use the command:
+1. Run:
 
+```
 /panel
+```
 
-2. HiveSupport should post the support panel.
+2. Confirm the support panel appears.
 
-3. Click the **General Support** button.
+3. Verify all four support buttons are visible:
 
-4. Complete the support form.
+* 🔧 Technical
+* 💳 Billing
+* 👤 Account
+* 💬 General
 
-5. Verify a ticket channel is created.
+4. Create a test ticket.
+
+5. Verify:
+
+* A private ticket channel is created.
+* The embedded ticket summary appears.
+* The configured support role has access.
+* The ticket is placed inside the configured category.
+
+6. Close the ticket.
+
+7. Verify:
+
+* A close reason is required.
+* Optional staff notes may be entered.
+* A transcript is generated.
+* An archive embed is posted to the transcript channel.
+* The `.txt` transcript file is attached.
+* The ticket channel is automatically deleted.
 
 ---
 
-## Staff Permissions
+# 👥 Staff Permissions
 
-HiveSupport currently uses Discord Administrator permissions for staff management.
+HiveSupport uses a configurable Discord role for support staff.
 
-Users with Administrator permissions can manage support tickets.
+Members with the configured **SUPPORT_ROLE_ID** are granted access to ticket channels and support functionality.
 
-More advanced permission systems may be introduced in future releases.
+Administrator permissions are still recommended during initial setup but are not required for day-to-day ticket management once configured correctly.
 
 ---
 
-## Alpha Release Notice
+# ⚙️ Configuration
 
-HiveSupport 1.0 Alpha is the first public testing release.
+Several parts of HiveSupport are configuration-driven, allowing customization without editing core bot logic.
 
-The core support workflow is fully functional and ready for community testing.
+Current configurable systems include:
 
-Feedback, bug reports, and suggestions are welcome as development continues.
+* Rotating bot presence
+* Support categories
+* Ticket intake questions
+* Button labels
+* Button styles
+* Modal titles
+* Embed colors
+* Ticket channel prefixes
+* Panel channel restriction
+* Transcript archive channel
 
-Thank you for helping test HiveSupport.
+---
+
+# 🧪 Alpha Notice
+
+HiveSupport **1.0 Alpha** is an actively developed release.
+
+While the core support workflow is stable and fully functional, new features, improvements, and quality-of-life updates are being added regularly.
+
+Bug reports, feature requests, and community feedback are greatly appreciated and help shape future releases.
+
+Thank you for supporting HiveSupport!
